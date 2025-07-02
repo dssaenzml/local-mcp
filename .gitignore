@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Local virtual environments
+.venv/
+
+# Distribution / build artifacts
+dist/
+build/
+*.egg-info/
+
+# Docker artifacts (if any)
+*.tar
+
+# Editor directories and OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+
+# Cursor project settings (local IDE details)
+.cursor/ 
