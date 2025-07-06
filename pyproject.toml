@@ -4,20 +4,48 @@ version = "0.1.0"
 description = "A local MCP server project"
 readme = "README.md"
 requires-python = ">=3.12"
+license = {file = "LICENSE"}
 dependencies = [
- "mcp[cli]>=1.5.0",
+ "anyio>=4.9.0",
+ "click>=8.2.1",
+ "fastmcp>=2.10.1",
+ "httpx>=0.28.1",
+ "mcp[cli]>=1.10.1",
+ "starlette>=0.47.1",
+ "uvicorn[standard]>=0.35.0",
 ]
+
 [[project.authors]]
 name = "Diego Saenz"
 email = "dosaenz28@gmail.com"
 
 [build-system]
-requires = [ "hatchling",]
+requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
 
-[project.scripts]
-local-mcp = "local_mcp:main"
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
+[tool.uv-dynamic-versioning]
+vcs = "git"
+style = "pep440"
+bump = true
+
+[project.scripts]
+local-mcp = "local_mcp.server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/local_mcp"]
+
+[tool.pyright]
+include = ["src/local_mcp"]
+venvPath = "."
+venv = ".venv"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = []
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"

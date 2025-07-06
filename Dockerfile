@@ -3,14 +3,18 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 WORKDIR /app
 
 # Copy only the files needed to resolve dependencies first
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml uv.lock README.md LICENSE ./
 
 # Install production dependencies inside a virtual environment
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-editable
 
-# Copy application source
-COPY src/local_mcp ./local_mcp
+# Copy the entire source structure for proper package installation
+COPY src/ ./src/
+
+# Install the local package
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --editable .
 
 # -----------------------------------------------------------------------------
 # Final runtime image – slim & secure
