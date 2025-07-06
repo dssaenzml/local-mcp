@@ -6,7 +6,7 @@ A fully-featured python [MCP](https://github.com/modelcontextprotocol/python-sdk
 
 ## ✨ Features
 
-• **Multiple Transport Options**: Supports both stdio and SSE (Server-Sent Events) transports  
+• **Multiple Transport Options**: Supports both stdio and streamable HTTP transports  
 • **Comprehensive Tool Set**: Notes management, calculations, and more  
 • **Resource & Prompt Support**: Rich MCP capabilities with resources and prompts  
 • **CLI Interface**: Easy command-line configuration with Click  
@@ -99,25 +99,37 @@ Or with explicit transport option:
 local-mcp --transport stdio
 ```
 
-### Option 2: SSE transport (for web-based integrations)
+### Option 2: Streamable HTTP transport (for web-based integrations)
 
-For Server-Sent Events transport, which is useful for web-based chat assistants:
+For streamable HTTP transport, which is useful for web-based chat assistants:
 
 ```bash
-local-mcp --transport sse --port 8000
+local-mcp --transport http --port 8000
 ```
 
-This starts the server on `http://localhost:8000/sse` and you can use this URL in your chat assistant's MCP configuration.
+This starts the server on `http://localhost:8000/mcp` and you can use this URL in your chat assistant's MCP configuration.
+
+You can also customize the host, path, and logging level:
+
+```bash
+local-mcp --transport http --host 0.0.0.0 --port 8080 --path /api/mcp --log-level DEBUG
+```
 
 ### Development mode with hot-reload
 
-For development with auto-reload on code changes (uses stdio transport):
+For development with auto-reload on code changes and web interface:
 
 ```bash
-mcp dev src/local_mcp/server.py
+# Install fastmcp if not already installed
+uv add --dev fastmcp
+
+# Note: fastmcp dev requires Node.js (install with: brew install node)
+
+# Run in development mode
+uv run --with fastmcp fastmcp dev src/local_mcp/server.py
 ```
 
-> **Inspector tip**  
+> **Inspector tip**  `
 > The dev server prints a full URL that already contains the session token—for example:
 >
 > ```
@@ -130,8 +142,8 @@ mcp dev src/local_mcp/server.py
 | Mode | Command | Use Case |
 |------|---------|----------|
 | Stdio (default) | `local-mcp` | Cursor/Claude Desktop integration |
-| SSE | `local-mcp --transport sse --port 8000` | Web-based chat assistants |
-| Development | `mcp dev src/local_mcp/server.py` | Development with hot-reload |
+| Streamable HTTP | `local-mcp --transport http --port 8000` | Web-based chat assistants |
+| Development | `uv run --with fastmcp fastmcp dev src/local_mcp/server.py` | Development with hot-reload |
 
 ---
 
@@ -149,7 +161,7 @@ Run with stdio transport (suitable for Cursor):
 docker run --rm -i local-mcp
 ```
 
-Run with SSE transport:
+Run with streamable HTTP transport:
 
 ```bash
 docker run --rm -p 8000:8000 local-mcp --transport http
@@ -168,7 +180,7 @@ Cursor uses `.cursor/mcp.json` to find and start servers. Three profiles are pre
       "command": "/path/to/your/local-mcp/.venv/bin/python",
       "args": ["/path/to/your/local-mcp/src/local_mcp/server.py"]
     },
-    "local-mcp-sse": {
+    "local-mcp-http": {
       "url": "http://localhost:8000/mcp"
     },
     "local-mcp-docker": {
@@ -184,9 +196,9 @@ Use the `local-mcp` or `local-mcp-docker` profile. Update the paths to match you
 - Replace `/path/to/your/local-mcp/` with your actual project path
 - The command should point to `.venv/bin/python` in your project directory
 
-### Using SSE transport
-1. Start the server with SSE transport: `local-mcp --transport sse --port 8000`
-2. Use the `local-mcp-sse` profile in Cursor
+### Using streamable HTTP transport
+1. Start the server with streamable HTTP transport: `local-mcp --transport http --port 8000`
+2. Use the `local-mcp-http` profile in Cursor
 3. Hit "MCP: Restart server" inside Cursor
 
 ---
@@ -199,8 +211,11 @@ The server supports the following CLI options:
 local-mcp --help
 ```
 
-- `--transport [stdio|sse]`: Choose transport method (default: stdio)
-- `--port INTEGER`: Port to listen on for SSE transport (default: 8000)
+- `--transport [stdio|http]`: Choose transport method (default: stdio)
+- `--port INTEGER`: Port to listen on for streamable HTTP transport (default: 8000)
+- `--host TEXT`: Host to bind to for streamable HTTP transport (default: localhost)
+- `--path TEXT`: Path to bind to for streamable HTTP transport (default: /mcp)
+- `--log-level [DEBUG|INFO|WARNING|ERROR|CRITICAL]`: Set logging level (default: INFO)
 
 ---
 

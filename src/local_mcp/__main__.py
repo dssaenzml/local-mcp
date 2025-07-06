@@ -4,7 +4,7 @@ Entry point for the local MCP server.
 """
 import sys
 
-from .server import main
+from local_mcp.server import main
 
 if __name__ == "__main__":
     sys.exit(main())

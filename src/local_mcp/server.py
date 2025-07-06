@@ -178,7 +178,6 @@ def main(port: int, transport: str, host: str, path: str, log_level: str) -> Non
         else:
             mcp.run(
                 transport=transport,
-                log_level=log_level,
             )
     except Exception as e:
         logger.error(f"Failed to start MCP server: {e}")
