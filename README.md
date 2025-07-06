@@ -252,3 +252,7 @@ You can test the tools using the MCP inspector or by integrating with compatible
 ## 🤝 Contributing / License
 
 This is a personal portfolio project. Licensed under the MIT License.
+
+---
+
+*Made with ❤️ by [Diego Saenz](mailto:dosaenz28@gmail.com)*
